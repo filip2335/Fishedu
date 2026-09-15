@@ -1,0 +1,46 @@
+# Zależności
+node_modules/
+
+# Build
+dist/
+dist-ssr/
+
+# Logi i pliki systemowe
+*.log
+.DS_Store
+Thumbs.db
+
+# Konfiguracja narzędzi / edytorów
+.vscode/
+.idea/
+*.local
+
+# Zagnieżdżona kopia projektu (duplikat)
+lingolearn/
+
+# Prywatne materiały pracy dyplomowej (nie publikować)
+Odp_Obr.docx
+Odp_Obr_skrocone.docx
+FishEdu_prezentacja*.pptx
+_patch_q3.cjs
+
+# Kod QR (plik pomocniczy, nie należy do projektu)
+fishedu_qr.png
+
+# Zrzuty ekranu (nieużywane przez aplikację)
+screenshots/
+
+# Skrypty pracy dyplomowej (nie należą do aplikacji)
+scripts/generate-thesis.mjs
+scripts/generate-thesis-v2.mjs
+scripts/generate_v2.py
+scripts/trim_thesis.py
+scripts/trim_thesis_round2.py
+scripts/trim_thesis_round3.py
+scripts/fix_bibliography.py
+scripts/fix_final.py
+scripts/fix_toc.py
+scripts/update_toc.py
+scripts/add_missing_bib.py
+scripts/extract-toc-pages.mjs
+scripts/extract-toc-pages-v2.mjs

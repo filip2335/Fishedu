@@ -1,0 +1,303 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Root variables ──────────────────────────────────────────── */
+:root {
+  --brand-purple: #8B5CF6;
+  --brand-yellow: #FACC15;
+}
+
+/* ── Toast slide-in ──────────────────────────────────────────── */
+@keyframes toastEnter {
+  from { transform: translateY(8px) scale(0.96); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);    opacity: 1; }
+}
+.toast-enter {
+  animation: toastEnter 220ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+/* ── Card answer flash (Znam → green, Nie znam → gray) ───────── */
+@keyframes cardFlashGreen {
+  0%   { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); transform: scale(1); }
+  30%  { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.55); transform: scale(1.02); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); transform: scale(1); }
+}
+@keyframes cardFlashGray {
+  0%   { box-shadow: 0 0 0 0 rgba(107, 114, 128, 0); transform: scale(1); }
+  30%  { box-shadow: 0 0 0 6px rgba(107, 114, 128, 0.45); transform: scale(0.99); }
+  100% { box-shadow: 0 0 0 0 rgba(107, 114, 128, 0); transform: scale(1); }
+}
+.card-flash-known   { animation: cardFlashGreen 520ms ease-out both; border-radius: 1.5rem; }
+.card-flash-unknown { animation: cardFlashGray  520ms ease-out both; border-radius: 1.5rem; }
+
+/* ── Floating XP gain ────────────────────────────────────────── */
+@keyframes xpFloat {
+  0%   { transform: translate(-50%, 0)     scale(0.8); opacity: 0; }
+  20%  { transform: translate(-50%, -8px)  scale(1.1); opacity: 1; }
+  100% { transform: translate(-50%, -64px) scale(1);   opacity: 0; }
+}
+.xp-floater {
+  animation: xpFloat 1100ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+/* ── Confetti burst (CSS-only) ───────────────────────────────── */
+@keyframes confettiPiece {
+  0%   { transform: translate(0, 0) rotate(0deg);                       opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); opacity: 0; }
+}
+.confetti-piece {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 14px;
+  border-radius: 2px;
+  will-change: transform, opacity;
+  animation: confettiPiece var(--dur, 1100ms) cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+/* ── Focus mode (deck study, distraction-free) ───────────────── */
+html.focus-mode .focus-hide { display: none !important; }
+html.focus-mode body { background: transparent; }
+html.focus-mode main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh !important;
+  padding: 2rem 1rem !important;
+}
+html.focus-mode main > section {
+  width: 100%;
+  margin: 0;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* ── Brand scrollbar (opt-in via .purple-scroll) ─────────────── */
+.purple-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--brand-purple) rgba(139, 92, 246, 0.12);
+}
+.purple-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.purple-scroll::-webkit-scrollbar-track {
+  background: rgba(139, 92, 246, 0.10);
+  border-radius: 4px;
+}
+.purple-scroll::-webkit-scrollbar-thumb {
+  background: var(--brand-purple);
+  border-radius: 4px;
+}
+.purple-scroll::-webkit-scrollbar-thumb:hover {
+  background: #7c4dee;
+}
+
+/* ── Aurora background ───────────────────────────────────────── */
+html {
+  background-color: #ffffff;
+}
+
+html.dark {
+  background:
+    radial-gradient(ellipse 90% 45% at 50% -2%, rgba(120, 40, 255, 0.38) 0%, transparent 70%),
+    radial-gradient(ellipse 55% 28% at 72% 4%, rgba(250, 200, 20, 0.22) 0%, transparent 62%),
+    linear-gradient(180deg, rgba(12, 7, 30, 1) 0%, rgba(4, 4, 14, 1) 100%);
+  background-attachment: fixed;
+  background-size: 100% 100%;
+}
+
+/* ── Base ────────────────────────────────────────────────────── */
+body {
+  font-family: 'DM Sans', sans-serif;
+  transition: color 0.3s;
+  background: transparent;
+}
+
+h1, h2, h3, .logo {
+  font-family: 'Syne', sans-serif;
+}
+
+/* ── Flashcard 3D flip ───────────────────────────────────────── */
+.flashcard {
+  perspective: 2000px;
+  width: 100%;
+}
+
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 224px;
+  text-align: center;
+  transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flashcard.flipped .flashcard-inner {
+  transform: rotateY(180deg);
+}
+
+.flashcard-front,
+.flashcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 1.5rem;
+}
+
+.flashcard-back {
+  transform: rotateY(180deg);
+}
+
+.flashcard:hover {
+  transform: translateY(-5px);
+  transition: transform 0.3s ease;
+}
+
+/* ── Animated spin (gradient border) ────────────────────────── */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin 3s linear infinite;
+}
+
+/* ── Heart bounce ────────────────────────────────────────────── */
+@keyframes heart-bounce {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.4); }
+  55%  { transform: scale(0.88); }
+  75%  { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+.heart-bounce svg {
+  animation: heart-bounce 0.45s ease forwards;
+}
+
+/* ── Purple glow (dark hover) ────────────────────────────────── */
+@keyframes purple-glow {
+  0%   { box-shadow: 0 0 10px rgba(142, 68, 173, 0.2); }
+  50%  { box-shadow: 0 0 28px rgba(142, 68, 173, 0.45); }
+  100% { box-shadow: 0 0 10px rgba(142, 68, 173, 0.2); }
+}
+
+.dark .flashcard:hover .flashcard-front-inner {
+  animation: purple-glow 2s infinite ease-in-out;
+}
+
+/* ── Magic badge ─────────────────────────────────────────────── */
+.magic-badge {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  border-radius: 9999px;
+}
+
+.magic-badge-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-break: break-word;
+  text-align: center;
+}
+
+/* ── Holiday slide panel ─────────────────────────────────────── */
+/*
+  Outer wrapper animates width 0→116px (overflow:hidden clips).
+  Inner content has a fixed w-[110px] — text never reflows.
+  Main content (flex-1) shrinks naturally; everything stays inside the card.
+*/
+/*
+  will-change:transform keeps the compositor layer alive when off-screen.
+  transform handles the visual slide; margin-right cancels the layout footprint when hidden.
+*/
+.holiday-slide {
+  width: 116px;
+  flex-shrink: 0;
+  transform: translateX(-116px);
+  margin-right: -116px;
+  will-change: transform;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              margin-right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flashcard.hovered .flashcard-front .holiday-slide,
+.flashcard.flipped .flashcard-back .holiday-slide {
+  transform: translateX(0);
+  margin-right: 0;
+}
+
+.holiday-slide > div {
+  min-width: 110px;
+}
+
+/* Back face: holiday panel always fully expanded */
+.flashcard-back .holiday-slide {
+  transform: translateX(0);
+  margin-right: 0;
+}
+
+/* ── Navbar scroll transition ────────────────────────────────── */
+.navbar-scrolled {
+  background: rgba(10, 10, 20, 0.92) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.18) !important;
+}
+
+/* ── Float blob animation ────────────────────────────────────── */
+@keyframes float {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(10px, -20px) scale(1.1); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+.animate-blob {
+  animation: float 7s infinite alternate;
+}
+
+/* ── Page entrance ───────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  animation: fadeUp 0.6s ease;
+}
+
+.fade-up-1 { animation-delay: 0.05s; }
+.fade-up-2 { animation-delay: 0.15s; }
+.fade-up-3 { animation-delay: 0.25s; }
+.fade-up-4 { animation-delay: 0.35s; }
+.fade-up-5 { animation-delay: 0.45s; }
+
+.feature-card {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: transform 300ms ease-out, box-shadow 300ms ease-out, opacity 600ms ease;
+}
+
+.feature-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.feature-card.visible:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
